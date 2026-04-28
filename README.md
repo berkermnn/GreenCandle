@@ -1,48 +1,58 @@
 # 🟢 Pump.fun / Raydium Green Candle Bot
 
-Kendi token'ın için 1 saatlik mumları izler. Mum kırmızı kapanacaksa, kapanıştan önce minimum alım yaparak yeşile çevirir.
+Monitors 1-hour candles for your own token. If a candle is about to close red, it automatically places the minimum buy needed to flip it green before close.
 
-## Özellikler
+## Features
 
-- **Pump.fun bonding curve** ve **Raydium (graduated)** tokenler için çalışır
-- 1 saatlik mum kapanışına yakın (son 2 dakika) kontrol eder
-- Kırmızı kapanacaksa minimum yeşile çevirecek kadar alım yapar
-- Mum kapanışına kadar tekrar kırmızıya dönerse yeniden alım
-- Günlük bütçe limiti — cüzdanı korur
-- Detaylı log'lama
+- Works for both **Pump.fun bonding curve** and **Raydium (graduated)** tokens
+- Watches the last 2 minutes before each 1H candle close
+- Places the minimum buy needed to turn a red candle green
+- If the candle flips back to red before close, it buys again
+- Daily budget limit — protects your wallet
+- Detailed logging
 
-## Kurulum
+## Setup
 
 ```bash
-# 1. Bağımlılıklar
+# 1. Install dependencies
 pip install -r requirements.txt
 
-# 2. .env dosyasını oluştur
+# 2. Create your .env file
 cp .env.example .env
-# .env'yi düzenle, private key ve token mint adresini gir
+# Edit .env — add your private key and token mint address
 
-# 3. Çalıştır
+# 3. Run
 python bot.py
 ```
 
-## .env Ayarları
+## .env Configuration
 
-| Değişken | Açıklama | Varsayılan |
+| Variable | Description | Default |
 |---|---|---|
-| `WALLET_PRIVATE_KEY` | Cüzdan private key (base58) | **zorunlu** |
-| `TOKEN_MINT` | Token mint adresi | **zorunlu** |
+| `WALLET_PRIVATE_KEY` | Wallet private key (base58) | **required** |
+| `TOKEN_MINT` | Token mint address | **required** |
 | `RPC_URL` | Solana RPC endpoint | mainnet |
-| `DAILY_BUDGET_SOL` | Günlük max harcama | 0.5 |
-| `MIN_BUY_SOL` | Minimum tek alım | 0.002 |
-| `MAX_BUY_SOL` | Maksimum tek alım | 0.05 |
-| `SLIPPAGE_BPS` | Slippage toleransı (bps) | 500 |
+| `DAILY_BUDGET_SOL` | Max daily spend | 50 |
+| `MIN_BUY_SOL` | Minimum single buy | 0.002 |
+| `MAX_BUY_SOL` | Maximum single buy | 20 |
+| `SLIPPAGE_BPS` | Slippage tolerance (bps) | 500 |
 | `PRIORITY_FEE` | Priority fee (lamports) | 100000 |
-| `CHECK_INTERVAL_SEC` | Mum izleme aralığı (saniye) | 10 |
-| `CANDLE_WATCH_WINDOW_SEC` | Kapanıştan kaç sn önce izle | 120 |
-| `TOKEN_STAGE` | `pumpfun` veya `raydium` | pumpfun |
+| `CHECK_INTERVAL_SEC` | Candle check interval (seconds) | 10 |
+| `CANDLE_WATCH_WINDOW_SEC` | Watch window before close (seconds) | 120 |
+| `TOKEN_STAGE` | `pumpfun` or `raydium` | pumpfun |
 
-## Güvenlik
+## How It Works
 
-- Private key'ini ASLA kimseyle paylaşma
-- Önce çok küçük bütçeyle test et
-- RPC olarak özel endpoint kullan (Helius, Quicknode vb.)
+1. Bot calculates when the current 1H candle closes
+2. Enters watch mode 2 minutes before close
+3. If the candle is red → calculates the minimum buy to flip it green
+4. Executes the buy
+5. Keeps watching until close — if it turns red again, buys again
+6. After close, sleeps until the next candle's watch window
+
+## Security
+
+- Never share your private key
+- Use a dedicated wallet with only the funds you need for the bot
+- Use a private RPC endpoint (Helius, QuickNode, etc.) — public RPC will rate limit you
+- Always test with small amounts first
