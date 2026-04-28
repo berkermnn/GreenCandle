@@ -24,9 +24,9 @@ TOKEN_MINT: str = _require("TOKEN_MINT")
 RPC_URL: str = os.getenv("RPC_URL", "https://api.mainnet-beta.solana.com")
 
 # Bütçe
-DAILY_BUDGET_SOL: Decimal = Decimal(os.getenv("DAILY_BUDGET_SOL", "0.5"))
+DAILY_BUDGET_SOL: Decimal = Decimal(os.getenv("DAILY_BUDGET_SOL", "50"))
 MIN_BUY_SOL: Decimal = Decimal(os.getenv("MIN_BUY_SOL", "0.002"))
-MAX_BUY_SOL: Decimal = Decimal(os.getenv("MAX_BUY_SOL", "0.05"))
+MAX_BUY_SOL: Decimal = Decimal(os.getenv("MAX_BUY_SOL", "20"))
 
 # Swap
 SLIPPAGE_BPS: int = int(os.getenv("SLIPPAGE_BPS", "500"))
