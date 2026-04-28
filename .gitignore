@@ -1,0 +1,5 @@
+".env" 
+"wallets.json" 
+"*.log" 
+"__pycache__/" 
+"volume_bot.py" 
